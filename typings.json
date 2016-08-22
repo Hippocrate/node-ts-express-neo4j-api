@@ -1,0 +1,31 @@
+{
+  "name": "up-up-service",
+  "dependencies": {
+    "jsonwebtoken": "registry:npm/jsonwebtoken#7.1.8+20160811031426",
+    "mongodb": "registry:npm/mongodb#2.1.0+20160721204323"
+  },
+  "globalDependencies": {
+    "bluebird": "registry:dt/bluebird#2.0.0+20160701023356",
+    "express": "registry:dt/express#4.0.0+20160317120654",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160701212727",
+    "form-data": "registry:dt/form-data#0.0.0+20160724024111",
+    "http-status": "registry:dt/http-status#0.2.1+20160412142223",
+    "inversify": "file:node_modules/inversify-dts/inversify/inversify.d.ts",
+    "inversify-express-utils": "file:node_modules/inversify-dts/inversify-express-utils/inversify-express-utils.d.ts",
+    "lodash": "registry:dt/lodash#3.10.0+20160619033623",
+    "mime": "registry:dt/mime#0.0.0+20160316155526",
+    "mongoose": "registry:dt/mongoose#3.8.5+20160629014609",
+    "morgan": "registry:dt/morgan#1.7.0+20160524142355",
+    "multer": "registry:dt/multer#0.0.0+20160726135055",
+    "node": "registry:dt/node#6.0.0+20160621231320",
+    "orientjs": "registry:dt/orientjs#0.0.0+20160624210115",
+    "passport": "registry:dt/passport#0.2.0+20160317120654",
+    "passport-facebook": "registry:dt/passport-facebook#1.0.3+20160316155526",
+    "passport-http-bearer": "registry:dt/passport-http-bearer#1.0.1+20160316155526",
+    "reflect-metadata": "file:node_modules/reflect-metadata/reflect-metadata.d.ts",
+    "request": "registry:dt/request#0.0.0+20160724024111",
+    "serve-static": "registry:dt/serve-static#0.0.0+20160606155157",
+    "uuid": "registry:dt/uuid#3.3.0+20160316155526",
+    "winston": "registry:dt/winston#0.0.0+20160417152829"
+  }
+}
