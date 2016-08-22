@@ -12,7 +12,7 @@ import config from "./env";
 
 export default function configureServices(kernel: inversify.interfaces.Kernel, passport: Passport) {
     kernel.bind<LoggerInstance>( TYPES.LoggerInstance ).toConstantValue(logger);
-    kernel.bind<IGraphDb>( TYPES.IGraphDb ).toConstantValue(new NeoGraphDb(config.mongodb));
+    kernel.bind<IGraphDb>( TYPES.IGraphDb ).toConstantValue(new NeoGraphDb(config.neo4j));
     kernel.bind<IDocumentDb>( TYPES.IDocumentDb ).toConstantValue(new MongoDB(config.mongodb));
     kernel.bind<Passport>( TYPES.Passport ).toConstantValue(passport);
     kernel.bind<AuthenticationService>( TYPES.AuthenticationService ).to(AuthenticationService).inSingletonScope();
