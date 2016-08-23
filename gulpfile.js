@@ -17,7 +17,7 @@ gulp.task('compile', function(){
      return merge([
         tsResult.dts.pipe(gulp.dest('.')),
         tsResult.js
-            .pipe(sourcemaps.write('.'))
+            .pipe(sourcemaps.write('.', {sourceRoot: __dirname + '/ts'}))
             .pipe(gulp.dest('.'))
     ]);
 });
