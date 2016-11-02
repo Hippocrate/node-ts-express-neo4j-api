@@ -3,7 +3,7 @@ const types = {
     IDocumentDb: "IDocumentDb",
     LoggerInstance: "LoggerInstance",
     Passport: "Passport",
-    IUserStore: "IUserStore",
+    UserStore: "UserStore",
     AuthenticationService: "AuthenticationService"
 };
 

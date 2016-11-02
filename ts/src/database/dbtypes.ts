@@ -25,7 +25,7 @@ export abstract class GraphItemBase extends Object {
     }
 }
 
-export abstract class Vertice extends GraphItemBase {
+export abstract class Vertex extends GraphItemBase {
 
     @Prop({
         indexed: true,
@@ -43,7 +43,7 @@ export abstract class Vertice extends GraphItemBase {
     creationTime: number;
 }
 
-export abstract class Edge<TFrom extends Vertice, TTo extends Vertice> extends GraphItemBase {
+export abstract class Edge<TFrom extends Vertex, TTo extends Vertex> extends GraphItemBase {
     from: TFrom;
     to: TTo;
 

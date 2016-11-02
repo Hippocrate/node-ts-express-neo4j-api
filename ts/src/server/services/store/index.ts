@@ -1,2 +1,1 @@
-export * from "./IUserStore";
-export * from "./impl";
+export * from "./UserStore";

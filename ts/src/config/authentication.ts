@@ -4,6 +4,9 @@ import { Kernel, injectable, inject } from "inversify";
 import {Passport} from "passport";
 import kernel from "./kernel";
 import  { TYPES } from "../constants";
+import  { UserStore } from "../server/services/store";
+import { UserClaims } from "../server/models";
+import jwt = require("jsonwebtoken");
 
 const BearerStrategy: Strategy = require("passport-http-bearer").Strategy;
 function configureAuthentication(passport: Passport) {
@@ -15,8 +18,31 @@ function configureAuthentication(passport: Passport) {
     // after authentication.
     passport.use(new Strategy(
       function(token, cb) {
-        // TODO
-      }));
+          let db = kernel.get<UserStore>(TYPES.UserStore);
+          try {
+              let identity: UserClaims = jwt.verify(token, config.jwtSecret);
+              
+              db.find(identity.id).then( user => {
+                  let time = new Date().getTime();
+                  if ( 
+                      user
+                      && user.enabled
+                      && user.accessToken 
+                      && user.accessToken === token 
+                      && identity.expirationTime > time 
+                    ) {
+
+                      cb(null, user);
+                  } else {
+                      cb(null, false);
+                  }
+              } ).catch( e => {
+                cb(e);
+              });
+            } catch (e) {
+                cb(null, false);
+            } 
+    }));
 
     // Configure Passport authenticated session persistence.
     //

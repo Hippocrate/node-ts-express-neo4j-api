@@ -1,7 +1,7 @@
 import { interfaces, Controller, TYPE } from "inversify-express-utils";
 import { HomeController, AuthenticationController } from "../server/controllers";
 import { IGraphDb, NeoGraphDb, IDocumentDb, MongoDB, AuthenticationService } from "../server/services";
-import { IUserStore, UserDocumentStore } from "../server/services/store";
+import { UserStore } from "../server/services/store";
 import { Kernel } from "inversify";
 import { Passport } from "passport";
 import configureAuth from "./authentication";
@@ -16,7 +16,7 @@ export default function configureServices(kernel: Kernel, passport: Passport) {
     kernel.bind<IDocumentDb>( TYPES.IDocumentDb ).toConstantValue(new MongoDB(config.mongodb));
     kernel.bind<Passport>( TYPES.Passport ).toConstantValue(passport);
     kernel.bind<AuthenticationService>( TYPES.AuthenticationService ).to(AuthenticationService).inSingletonScope();
-    kernel.bind<IUserStore>( TYPES.IUserStore ).to(UserDocumentStore).inSingletonScope();
+    kernel.bind<UserStore>( TYPES.UserStore ).to(UserStore).inSingletonScope();
     
     // controllers
     kernel.bind<interfaces.Controller>( TYPE.Controller ).to( HomeController ).whenTargetNamed("HomeController");

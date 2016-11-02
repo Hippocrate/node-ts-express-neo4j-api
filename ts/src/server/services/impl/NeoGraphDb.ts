@@ -1,4 +1,4 @@
-import { Vertice, Edge, GraphItemBase, CypherResult } from "../../../database/dbtypes";
+import { Vertex, Edge, GraphItemBase, CypherResult } from "../../../database/dbtypes";
 import { Neo4jConnection } from "../../../utils/connection";
 import { IGraphDb } from "../IGraphDb";
 import { GraphItemKey, PropertiesKey, PropertiesMeta, GraphClassMeta } from "../../../database/decorators";
@@ -18,30 +18,35 @@ export class NeoGraphDb implements IGraphDb {
         }
     }
 
-    createVertice<T extends Vertice>( vertice: T ): Promise<T> {
+    createVertex<T extends Vertex>( vertice: T ): Promise<T> {
         let classMeta: GraphClassMeta = Reflect.getMetadata(GraphItemKey, vertice.constructor);
         let propsMeta: PropertiesMeta = Reflect.getMetadata(PropertiesKey, vertice.constructor);
 
         vertice.id = uuid.v4().toString();
         vertice.creationTime = new Date().getTime();
 
-        let dbVertice = {};
+        let dbVertex = {};
 
         for (let key in propsMeta.properties) {
             let pMeta = propsMeta.properties[key];
-            if (pMeta.mandatory && !vertice[key]) {
-                throw `Property ${key} of vertice ${classMeta.name} is required`;
+            if (pMeta.mandatory && (vertice[key] === undefined || vertice[key] === null) ) {
+                throw new Error(`Property ${key} of vertice ${classMeta.name} is required`);
             }
-
-            dbVertice[key] = vertice[key];
+            if ( vertice[key] !== undefined ) {
+                dbVertex[key] = vertice[key];
+            }
         }
 
-        let dbVerticeQuery = `(:${classMeta.name} ${this.serializeGraphProperty(dbVertice)})`;
+        let dbVertexQuery = `(:${classMeta.name} ${this.serializeGraphProperty(dbVertex)})`;
 
-        return this.query<T>(`create ${dbVerticeQuery}`, dbVertice).then( r => vertice );
+        return this.query<T>(`create ${dbVertexQuery}`, dbVertex)
+            .then( r => vertice )
+            .catch(e => { 
+                throw e; 
+            });
     }
 
-    updateVertice<T extends Vertice>( vertice: T ): Promise<T> {
+    updateVertex<T extends Vertex>( vertice: T ): Promise<T> {
         let classMeta: GraphClassMeta = Reflect.getMetadata(GraphItemKey, vertice.constructor);
         let propsMeta: PropertiesMeta = Reflect.getMetadata(PropertiesKey, vertice.constructor);
 
@@ -49,7 +54,10 @@ export class NeoGraphDb implements IGraphDb {
         let builder: string[] = [];
 
         for (let propName in propsMeta.properties) {
-            if (!propsMeta.properties[propName].readonly) {
+            if ((vertice[propName] === undefined || vertice[propName] === null) && propsMeta.properties[propName].mandatory) {
+                throw new Error(`Property ${propName} of vertice ${classMeta.name} is required`);
+            }
+            if (!propsMeta.properties[propName].readonly && vertice[propName] !== undefined ) {
                 builder.push(`v.${propName} = {${propName}}`);
                 builder.push(", ");
             }
@@ -57,9 +65,11 @@ export class NeoGraphDb implements IGraphDb {
 
         builder.pop();
         query += builder.join("");
-        console.log(query);
 
-        return this.query<T>(query, vertice).then( r => vertice );
+        return this.query<T>(query, vertice).then( r => vertice )
+            .catch(e => { 
+                throw e; 
+            });
     }
 
     serializeGraphProperty(obj: any): string {
@@ -76,13 +86,13 @@ export class NeoGraphDb implements IGraphDb {
         return builder.join("");
     }
 
-    deleteEdge<TFrom extends Vertice, TTo extends Vertice>( edge: Edge<TFrom, TTo> ): Promise<Edge<TFrom, TTo>> {
+    deleteEdge<TFrom extends Vertex, TTo extends Vertex>( edge: Edge<TFrom, TTo> ): Promise<Edge<TFrom, TTo>> {
         let classMeta: GraphClassMeta = Reflect.getMetadata(GraphItemKey, edge.constructor);
         
         return this.query(`match ()-[e:${classMeta.name} {id: {id}}]-() delete e`, {id: edge.id});
     }
 
-    createEdge<TFrom extends Vertice, TTo extends Vertice>( edge: Edge<TFrom, TTo>): Promise<Edge<TFrom, TTo>> {
+    createEdge<TFrom extends Vertex, TTo extends Vertex>( edge: Edge<TFrom, TTo>): Promise<Edge<TFrom, TTo>> {
         let fromClassMeta: GraphClassMeta = Reflect.getMetadata(GraphItemKey, edge.from.constructor);
         let toClassMeta: GraphClassMeta = Reflect.getMetadata(GraphItemKey, edge.to.constructor);
 
@@ -91,24 +101,29 @@ export class NeoGraphDb implements IGraphDb {
 
         edge.id = uuid.v4().toString();
         edge.creationTime = new Date().getTime();
-        let dbVertice = {};
+        let dbVertex = {};
 
         for (let key in propsMeta.properties) {
             let pMeta = propsMeta.properties[key];
-            if (pMeta.mandatory && !edge[key]) {
-                throw `Property ${key} of vertice ${classMeta.name} is required`;
+            if (pMeta.mandatory && edge[key] === undefined || edge[key] === null ) {
+                throw new Error(`Property ${key} of vertice ${classMeta.name} is required`);
             }
-
-            dbVertice[key] = edge[key];
+            if ( edge[key] !== undefined ) {
+                dbVertex[key] = edge[key];
+            }
         }
 
-        let dbEdgeQuery = `[:${classMeta.name} ${this.serializeGraphProperty(dbVertice)}]`;
+        let dbEdgeQuery = `[:${classMeta.name} ${this.serializeGraphProperty(dbVertex)}]`;
         let query = `
             match (from:${fromClassMeta.name} {id: '${ edge.from.id }'})
             match (to:${toClassMeta.name} {id: '${ edge.to.id }'})
             create (from)-${dbEdgeQuery}->(to)`;
 
-        return this.query(query, dbVertice).then( r => edge );
+        return this.query(query, dbVertex)
+            .then( r => edge )
+            .catch( e => {
+                throw e;
+            });
     }
 
     query<T>( query: string );
@@ -140,14 +155,35 @@ export class NeoGraphDb implements IGraphDb {
 
     transaction<T>( scope: (db: IGraphDb, commit: (result: T) => void, rollback: (reason?: any) => void) => void ): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-
+            
             let tx = this._db.beginTransaction();
             let db = new NeoGraphDb(this._db, tx.cypher.bind(tx));
-            let commit = (result: T) =>  tx.commit(() => resolve(result));
-            let rollback = (reason: any) => tx.rollback(() => reject(reason));
+            let commit = (result: T) => {
+                try {
+                    tx.commit(() => resolve(result)); 
+                } catch (e) {
+                    reject(e);
+                }
+            };
+
+            let rollback = (reason: any) => {
+                try {
+                    tx.rollback(() => reject(new Error(reason)));
+                } catch (e) {
+                    reject(e);
+                }
+            };
 
             try {
-                scope(db, commit, rollback );
+                let res: any = scope(db, commit, rollback );
+                if (res && typeof res.then === "function") {
+                    res.then(val => { 
+                        commit(val); 
+                    }, e => { 
+                        rollback(e); 
+                    }  );
+                }
+
             } catch (e) {
                 rollback(e);
             }

@@ -17,12 +17,8 @@ export class AuthenticationController {
     }
 
     @Post("/login")
-    public login(req: Request, res: Response, next: NextFunction): any {
-        let result = this.authService.authenticate(req.body.username, req.body.password);
-        if (result.succeeded) {
-            return result;
-        }
-
-        return httpStatus.UNAUTHORIZED;
+    public async login(req: Request, res: Response, next: NextFunction): Promise<any> {
+        let result = await this.authService.authenticate(req.body.username, req.body.password);
+        return result;
     }
 }

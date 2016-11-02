@@ -1,36 +1,27 @@
 import { GraphItem, Prop } from "../decorators";
-import {Vertice, Edge}  from "../dbtypes";
+import { Vertex, Edge }  from "../dbtypes";
 
 @GraphItem("User")
-export class User extends Vertice {
+export class User extends Vertex {
     @Prop({
         readonly: true,
         mandatory: true,
         indexed: true,
         unique: true
-    }) userName: string;
-
-    @Prop() firstName: string;
-    @Prop() lastName: string;
-
+    }) username: string;
+    
     @Prop({
-        indexed: true,
         mandatory: true,
-        unique: true
-    }) facebookId: string;
+    }) password: string;
 
     @Prop({
         indexed: true,
         unique: true
     }) accessToken: string;
 
-    @Prop() accessTokenExpiration: Date;
     @Prop({
-        indexed: true,
-        unique: true
-    }) email: string;
-
-    @Prop() gender: string;
-    @Prop() locale: string;
-    @Prop() hometown: string;
+        mandatory: true,
+        indexed: true
+    })
+    enabled: boolean;
 }

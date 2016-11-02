@@ -1,15 +1,12 @@
 import jwt = require("jsonwebtoken");
 import config from "../../config/env/index";
-import {injectable} from "inversify";
+import {injectable, inject} from "inversify";
 import { Request, Response, NextFunction } from "express";
 import passport = require("passport");
 import express = require("express");
-
-// sample user, used for authentication
-const user = {
-  username: "username",
-  password: "password"
-};
+import { UserClaims } from "../models";
+import { TYPES } from "../../constants";
+import { UserStore } from "./store";
 
 export interface AuthenticationResult {
     succeeded: boolean;
@@ -19,24 +16,38 @@ export interface AuthenticationResult {
 
 @injectable()
 export class AuthenticationService {
+    static TOKEN_LIFETIME = 1000 * 3600 * 24 * 7; // one week
+
     static authorize(): express.Handler {
         return passport.authenticate("bearer", { session: false });
     }
 
-    authenticate(username: string, password: string, ...args: string[]): AuthenticationResult {
-        // Ideally you'll fetch this from the db
-        // Idea here was to show how jwt works with simplicity
-        if (username === user.username && password === user.password) {
-            const accessToken = jwt.sign({
-                username: user.username
-            }, config.jwtSecret);
+    constructor(
+        @inject(TYPES.UserStore) private userStore: UserStore
 
+    ) {}
+
+    createToken(claims: UserClaims): string {
+        claims.expirationTime = new Date().getTime() + AuthenticationService.TOKEN_LIFETIME;
+        return jwt.sign(claims, config.jwtSecret);
+    }
+
+    async authenticate(username: string, password: string): Promise<AuthenticationResult> {
+        const user = await this.userStore.findByName(username);
+
+        if (username === user.username && password === user.password) {
+            const accessToken = this.createToken({
+                id: user.id,
+                username: user.username,
+                expirationTime: new Date().getTime() + AuthenticationService.TOKEN_LIFETIME
+            });
+            user.accessToken = accessToken;
+            await this.userStore.update(user);
+            
             return {
                 succeeded: true,
                 accessToken,
-                user: {
-                    username: username
-                }
+                user
             };
         }
 
