@@ -1,10 +1,18 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "moduleResolution": "node",
         "sourceMap": true,
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
-    }
+        "experimentalDecorators": true,
+        "rootDir": "./ts",
+        "lib": ["es6", "dom"],
+        "outDir": "",
+        "pretty": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "ts/**/*.ts"
+    ]
 }

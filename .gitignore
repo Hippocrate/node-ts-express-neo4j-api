@@ -1,5 +1,5 @@
 /node_modules/
 /src
 /logs/
-index.js
-index.js.map
+/index.js
+/index.js.map

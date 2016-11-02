@@ -7,12 +7,12 @@ const logger = new (winston.Logger)({
 			level: "debug",
             handleExceptions: true
 		}),
-		new (winston.transports.File)( {
-			colorize: false,
-			handleExceptions: true,
-			json: true,
-			filename: "./logs/activity.log"
-		} )
+		// new (winston.transports.File)( {
+		// 	colorize: false,
+		// 	handleExceptions: true,
+		// 	json: true,
+		// 	filename: "./logs/activity.log"
+		// } )
 	],
 	exitOnError: false
 });

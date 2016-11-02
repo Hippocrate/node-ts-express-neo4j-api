@@ -23,7 +23,7 @@ export class AuthenticationService {
         return passport.authenticate("bearer", { session: false });
     }
 
-    authenticate(username: string, password: string): AuthenticationResult {
+    authenticate(username: string, password: string, ...args: string[]): AuthenticationResult {
         // Ideally you'll fetch this from the db
         // Idea here was to show how jwt works with simplicity
         if (username === user.username && password === user.password) {
