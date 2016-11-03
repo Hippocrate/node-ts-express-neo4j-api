@@ -1,11 +1,11 @@
 import jwt = require("jsonwebtoken");
-import config from "../../config/env/index";
+import config from "../config/env/index";
 import {injectable, inject} from "inversify";
 import { Request, Response, NextFunction } from "express";
 import passport = require("passport");
 import express = require("express");
 import { UserClaims } from "../models";
-import { TYPES } from "../../constants";
+import { TYPES } from "../constants";
 import { UserStore } from "./store";
 
 export interface AuthenticationResult {

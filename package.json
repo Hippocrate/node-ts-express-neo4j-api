@@ -1,7 +1,7 @@
 {
-  "name": "up-up-service",
+  "name": "node-ts-express-neo4j-api",
   "version": "1.0.0",
-  "description": "0.1.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "npm run compile & mocha test",
@@ -67,6 +67,6 @@
     "@types/chai": "3.4.34",
     "@types/mocha": "2.2.32"
   },
-  "author": "Idriss Hippocrate",
+  "author": "Idriss Hippocrate<ihippocrate@gmail.com>",
   "license": "ISC"
 }

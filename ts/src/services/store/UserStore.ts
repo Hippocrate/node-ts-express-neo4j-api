@@ -1,7 +1,7 @@
 import {inject, injectable} from "inversify";
 import { IGraphDb, IDocumentDb} from "../index";
-import { TYPES } from "../../../constants";
-import { User } from "../../../database/graph";
+import { TYPES } from "../../constants";
+import { User } from "../../database/graph";
 import moment = require("moment");
 
 @injectable()

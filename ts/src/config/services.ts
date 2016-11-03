@@ -1,7 +1,7 @@
 import { interfaces, Controller, TYPE } from "inversify-express-utils";
-import { HomeController, AuthenticationController } from "../server/controllers";
-import { IGraphDb, NeoGraphDb, IDocumentDb, MongoDB, AuthenticationService } from "../server/services";
-import { UserStore } from "../server/services/store";
+import { HomeController, AuthenticationController } from "../controllers";
+import { IGraphDb, NeoGraphDb, IDocumentDb, MongoDB, AuthenticationService } from "../services";
+import { UserStore } from "../services/store";
 import { Kernel } from "inversify";
 import { Passport } from "passport";
 import configureAuth from "./authentication";

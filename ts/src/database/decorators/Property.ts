@@ -31,7 +31,7 @@ export function Prop( propertyMeta?: PropertyMetadata ): PropertyDecorator {
         if (!propertyMeta.typeName) {
             let t = Reflect.getMetadata("design:type", target, propertyName);
             if (!t) {
-                throw `Unable to resolve type. You must provide a type for ${propertyName} on ${(<any>target).name}`;
+                throw new Error(`Unable to resolve type. You must provide a type for ${propertyName} on ${(<any>target).name}`);
             }
 
             propertyMeta.typeName = t.name;
@@ -44,7 +44,6 @@ export function Prop( propertyMeta?: PropertyMetadata ): PropertyDecorator {
         if (propertyMeta.indexed && !propertyMeta.unique) {
             meta.indexes.push(propertyName);
         }
-
 
         meta.properties[propertyName] = propertyMeta;
         Reflect.defineMetadata(Key, meta, target.constructor);

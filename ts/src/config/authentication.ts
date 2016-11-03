@@ -4,8 +4,8 @@ import { Kernel, injectable, inject } from "inversify";
 import {Passport} from "passport";
 import kernel from "./kernel";
 import  { TYPES } from "../constants";
-import  { UserStore } from "../server/services/store";
-import { UserClaims } from "../server/models";
+import  { UserStore } from "../services/store";
+import { UserClaims } from "../models";
 import jwt = require("jsonwebtoken");
 
 const BearerStrategy: Strategy = require("passport-http-bearer").Strategy;

@@ -1,4 +1,4 @@
-import { Vertex, Edge, GraphItemBase } from "../../database/dbtypes";
+import { Vertex, Edge, GraphItemBase } from "../database/dbtypes";
 
 export interface IGraphDb {
     createVertex<T extends Vertex>( Vertex: T ): Promise<T>;

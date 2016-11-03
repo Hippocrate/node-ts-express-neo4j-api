@@ -1,7 +1,7 @@
-import { Vertex, Edge, GraphItemBase, CypherResult } from "../../../database/dbtypes";
-import { Neo4jConnection } from "../../../utils/connection";
+import { Vertex, Edge, GraphItemBase, CypherResult } from "../../database/dbtypes";
+import { Neo4jConnection } from "../../utils/connection";
 import { IGraphDb } from "../IGraphDb";
-import { GraphItemKey, PropertiesKey, PropertiesMeta, GraphClassMeta } from "../../../database/decorators";
+import { GraphItemKey, PropertiesKey, PropertiesMeta, GraphClassMeta } from "../../database/decorators";
 import "reflect-metadata";
 import { injectable } from "inversify";
 const uuid = require("uuid");

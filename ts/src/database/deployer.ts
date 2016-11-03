@@ -1,7 +1,7 @@
 import { ClassRegistry } from "./registry";
 import { LoggerInstance } from "winston";
 import { GraphItemKey, GraphClassMeta, PropertiesMeta, PropertiesKey } from "./decorators";
-import { IGraphDb } from "../server/services/IGraphDb";
+import { IGraphDb } from "../services/IGraphDb";
 
 export class DbDeployer {
     constructor(public registry: ClassRegistry, private _db: IGraphDb, private _logger: LoggerInstance) {

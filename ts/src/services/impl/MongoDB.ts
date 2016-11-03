@@ -1,6 +1,6 @@
 import { Db, ObjectID } from "mongodb";
 import { injectable } from "inversify";
-import { MongoDBConnection } from "../../../utils/connection";
+import { MongoDBConnection } from "../../utils/connection";
 import {IDocumentDb} from "../IDocumentDb";
 
 @injectable()

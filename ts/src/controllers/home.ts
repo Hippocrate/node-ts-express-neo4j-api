@@ -2,7 +2,7 @@ import {  Get, Controller } from "inversify-express-utils";
 import { injectable, inject } from "inversify";
 import { Request, Response, NextFunction } from "express";
 import { IGraphDb, AuthenticationService } from "../services";
-import { TYPES }  from "../../constants";
+import { TYPES }  from "../constants";
 
 @injectable()
 @Controller("/")
