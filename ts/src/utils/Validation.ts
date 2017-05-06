@@ -34,7 +34,7 @@ export function validate(targetClass: Function, instance: any): ValidationResult
         Reflect.defineMetadata(Key, meta, targetClass);
     }
 
-    return joi.validate(instance, schema);
+    return joi.validate<any>(instance, schema);
 }
 
 export function validateBody(bodyType: Function) {

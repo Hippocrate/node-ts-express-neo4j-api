@@ -1,7 +1,7 @@
 import Promise = require("bluebird");
 import config from "./config/env/index";
 import { configureExpress, configureErrors } from "./config/express";
-import kernel from "./config/kernel";
+import container from "./config/di";
 import configureAuth from "./config/authentication";
 import configureServices from "./config/services";
 import passport = require("passport");
@@ -18,10 +18,10 @@ MongoDBConnection.connect(config.mongodb)
 configureAuth(passport);
 
 // configure services and DI
-configureServices(kernel, passport);
+configureServices(container, passport);
 
 // start the server
-let server = new InversifyExpressServer( kernel );
+let server = new InversifyExpressServer( container );
 server.setConfig(configureExpress);
 server.setErrorConfig(configureErrors);
 

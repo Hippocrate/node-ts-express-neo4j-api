@@ -5,7 +5,6 @@ import config from "./env";
 import winstonInstance from "./winston";
 import APIError from "../utils/APIError";
 import { ErrorRequestHandler } from "express";
-import { Kernel, injectable, inject } from "inversify";
 import configureAuth from "./authentication";
 import passport = require("passport");
 

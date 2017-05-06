@@ -1,15 +1,15 @@
 import { Strategy } from "passport-http-bearer";
-import config from "./env/index";
-import { Kernel, injectable, inject } from "inversify";
-import {Passport} from "passport";
-import kernel from "./kernel";
-import  { TYPES } from "../constants";
-import  { UserStore } from "../services/store";
+import { Container, injectable, inject } from "inversify";
+import { PassportStatic } from "passport";
+import { TYPES } from "../constants";
+import { UserStore } from "../services/store";
 import { UserClaims } from "../models";
+import config from "./env/index";
+import container from "./di";
 import jwt = require("jsonwebtoken");
 
 const BearerStrategy: Strategy = require("passport-http-bearer").Strategy;
-function configureAuthentication(passport: Passport) {
+function configureAuthentication(passport: PassportStatic) {
     // Configure the Bearer strategy for use by Passport.
     //
     // The Bearer strategy requires a `verify` function which receives the
@@ -18,7 +18,7 @@ function configureAuthentication(passport: Passport) {
     // after authentication.
     passport.use(new Strategy(
       function(token, cb) {
-          let db = kernel.get<UserStore>(TYPES.UserStore);
+          let db = container.get<UserStore>(TYPES.UserStore);
           try {
               let identity: UserClaims = jwt.verify(token, config.jwtSecret);
               
