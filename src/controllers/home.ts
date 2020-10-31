@@ -8,13 +8,13 @@ export class HomeController {
     constructor(private _db: Neo4jConnection) {
     }
 
+    @httpGet("protected", authorize())
+    public getProtecetedResource(req: Request, res: Response): any {
+        return `Your are authorized !`;
+    }
+
     @httpGet("/")
     public get(req: Request, res: Response,): any {
         return `Hello world`;
-    }
-
-    @httpGet("/protected")
-    public getProtecetedResource(req: Request, res: Response): any {
-        return `Your are authorized !`;
     }
 }

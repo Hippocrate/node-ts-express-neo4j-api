@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import { User } from "../../database/graph";
 import { commandBuilder, Neo4jConnection } from "database/services";
+import * as parser from 'parse-neo4j';
 
 @injectable()
 export class UserStore {
@@ -9,14 +10,16 @@ export class UserStore {
     ) {
     }
 
-    findById(id: string): Promise<User | null> {
-        return this.db.first(`match (u:User {id: {id}}) return u`, { id })
-            .then(r => r && r.record ? new User(r.record) : null);
+    async findById(id: string): Promise<User | null> {
+        const res = await this.db.query(`match (u:User {id: {id}}) return u`, { id });
+        const data = parser.parse(res)[0];
+        return new User(data);
     }
 
-    findByName(username: string): Promise<User | null> {
-        return this.db.first(`match (u:User {username: {username}}) return u`, { username })
-            .then(r => r && r.record ? new User(r.record) : null);
+    async findByName(username: string): Promise<User | null> {
+        const res = await this.db.query(`match (u:User {username: {username}}) return u`, { username });
+        const data = parser.parse(res)[0];
+        return new User(data);
     }
 
     exists(username: string): Promise<boolean> {

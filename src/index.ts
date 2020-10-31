@@ -22,7 +22,6 @@ configureServices(container, passport);
 // start the server
 let server = new InversifyExpressServer(container);
 server.setConfig(configureExpress);
-server.setErrorConfig(configureErrors);
 
 let app = server.build();
 

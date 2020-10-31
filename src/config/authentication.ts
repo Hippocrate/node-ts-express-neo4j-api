@@ -24,9 +24,6 @@ function configureAuthentication(passport: PassportStatic) {
         let time = new Date().getTime();
         if (
           user
-          && user.enabled
-          && user.accessToken
-          && user.accessToken === token
           && identity.expirationTime! > time
         ) {
           cb(null, user);

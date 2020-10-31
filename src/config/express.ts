@@ -39,7 +39,7 @@ export function configureExpress( app: Application ) {
 	// session.
 	app.use(passport.initialize());
 	app.use(passport.session());
-
+	configureAuth(passport);
 	// enable detailed API logging in dev env
 	if (config.env === "development") {
 		expressWinston.requestWhitelist.push("body");
@@ -56,6 +56,7 @@ export function configureExpress( app: Application ) {
 export function configureErrors( app: Application ) {
 		// if error is not an instanceOf APIError, convert it.
 	app.use(<ErrorRequestHandler>(err, req, res, next) => {
+		console.log(err)
 		if (err instanceof expressValidation.ValidationError) {
 			// validation error contains errors which is an array of error each containing message[]
 			const unifiedErrorMessage = err.errors.map(error => error.messages.join(". ")).join(" and ");

@@ -37,7 +37,6 @@ export class AuthenticationService {
                 expirationTime: new Date().getTime() + AuthenticationService.TOKEN_LIFETIME
             });
             user.accessToken = accessToken;
-            await this.userStore.update(user);
 
             return {
                 succeeded: true,
